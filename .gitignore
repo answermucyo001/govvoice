@@ -1,0 +1,15 @@
+node_modules/
+dist/
+build/
+.env
+.env.*
+!.env.example
+coverage/
+*.log
+npm-debug.log*
+.DS_Store
+server/uploads/
+server/tmp/
+.vscode/
+.idea/
+client/.vite/

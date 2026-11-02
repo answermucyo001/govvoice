@@ -1,0 +1,22 @@
+{
+  "name": "cfcs-rwanda",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Citizen Feedback & Complaint System (CFCS) for Rwanda",
+  "scripts": {
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "dev": "concurrently -n API,WEB -c blue,green \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "build": "npm --prefix client run build",
+    "test": "npm --prefix server test",
+    "migrate": "npm --prefix server run migrate",
+    "seed": "npm --prefix server run seed"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.5"
+  },
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}

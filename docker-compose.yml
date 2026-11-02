@@ -1,0 +1,66 @@
+name: govvoice
+
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: cfcs
+      MYSQL_USER: cfcs
+      MYSQL_PASSWORD: cfcs_dev_password
+      MYSQL_ROOT_PASSWORD: root_dev_password
+    command:
+      - --port=3306
+      - --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', '127.0.0.1', '-uroot', '-proot_dev_password']
+      interval: 5s
+      timeout: 5s
+      retries: 24
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      args:
+        VITE_API_URL: ''
+    ports:
+      - '5000:5000'
+    environment:
+      NODE_ENV: development
+      PORT: 5000
+      APP_URL: http://localhost:5000
+      API_URL: http://localhost:5000
+      CORS_ORIGINS: http://localhost:5000
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: cfcs
+      DB_PASSWORD: cfcs_dev_password
+      DB_NAME: cfcs
+      DATABASE_SSL: 'false'
+      JWT_ACCESS_SECRET: local-compose-access-secret-change-before-deploying
+      JWT_REFRESH_SECRET: local-compose-refresh-secret-change-before-deploying
+      ENCRYPTION_KEY: local-compose-encryption-key-change-before-deploying
+      COOKIE_SECURE: 'false'
+      COOKIE_SAME_SITE: lax
+      STORAGE_PROVIDER: local
+      SMS_PROVIDER: console
+      SERVE_CLIENT: 'true'
+      RUN_MIGRATIONS: 'true'
+      RUN_SEED: 'true'
+      SUPER_ADMIN_EMAIL: admin@govvoice.rw
+      SUPER_ADMIN_PASSWORD: ChangeMe123!
+      SUPER_ADMIN_NATIONAL_ID: '1198000000000001'
+      ESCALATION_CRON: '*/15 * * * *'
+      ENABLE_ESCALATION_JOB: 'true'
+    volumes:
+      - uploads_data:/app/server/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+  uploads_data:
